@@ -74,6 +74,7 @@ void * AsyncTaskQueue::wait(std::unique_lock<std::mutex> & lock)
 void AsyncTaskQueue::finish()
 {
     is_finished = true;
+    num_tasks = 0;
     condvar.notify_one();
 }
 
