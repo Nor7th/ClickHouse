@@ -27,7 +27,7 @@ AsyncTaskQueue::AsyncTaskQueue()
     socket_event.events = EPOLLIN | EPOLLPRI;
     socket_event.data.ptr = pipe_fd;
 
-    if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_ADD, pipe_fd[1], &socket_event))
+    if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_ADD, pipe_fd[0], &socket_event))
         throwFromErrno("Cannot add pipe descriptor to epoll", ErrorCodes::CANNOT_OPEN_FILE);
 }
 
@@ -89,7 +89,7 @@ void AsyncTaskQueue::finish()
     tasks.clear();
 
     uint64_t buf = 0;
-    while (-1 == write(pipe_fd[0], &buf, sizeof(buf)))
+    while (-1 == write(pipe_fd[1], &buf, sizeof(buf)))
     {
         if (errno == EAGAIN || errno == EWOULDBLOCK)
             break;
