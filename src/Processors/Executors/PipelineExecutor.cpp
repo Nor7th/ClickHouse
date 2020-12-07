@@ -779,6 +779,7 @@ void PipelineExecutor::executeImpl(size_t num_threads)
             {
                 auto * node = static_cast<ExecutingGraph::Node *>(task.data);
                 executor_contexts[task.thread_num]->async_tasks.push(node);
+                ++num_waiting_async_tasks;
 
                 if (threads_queue.has(task.thread_num))
                 {
