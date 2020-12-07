@@ -37,8 +37,7 @@ void AsyncTaskQueue::addTask(size_t thread_number, void * data, int fd)
     if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &socket_event))
         throwFromErrno("Cannot add socket descriptor to epoll", ErrorCodes::CANNOT_OPEN_FILE);
 
-    ++num_tasks;
-    if (num_tasks == 1)
+    if (size() == 1)
         condvar.notify_one();
 }
 
@@ -70,14 +69,13 @@ AsyncTaskQueue::TaskData AsyncTaskQueue::wait(std::unique_lock<std::mutex> & loc
 
     auto res = *it;
     tasks.erase(it);
-    --num_tasks;
     return res;
 }
 
 void AsyncTaskQueue::finish()
 {
     is_finished = true;
-    num_tasks = 0;
+    tasks.clear();
     condvar.notify_one();
 }
 

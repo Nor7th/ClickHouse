@@ -524,7 +524,7 @@ void PipelineExecutor::executeStepImpl(size_t thread_num, size_t num_threads, st
                     break;
                 }
 
-                if (threads_queue.size() + 1 == num_threads && num_waiting_async_tasks == 0)
+                if (threads_queue.size() + 1 == num_threads && async_task_queue.empty() && num_waiting_async_tasks == 0)
                 {
                     lock.unlock();
                     finish();
