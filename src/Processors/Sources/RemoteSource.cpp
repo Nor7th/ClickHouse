@@ -22,7 +22,7 @@ RemoteSource::~RemoteSource() = default;
 
 ISource::Status RemoteSource::prepare()
 {
-    if (is_async_state)
+    if (is_async_state && !was_query_canceled)
         return Status::Async;
 
     Status status = SourceWithProgress::prepare();
