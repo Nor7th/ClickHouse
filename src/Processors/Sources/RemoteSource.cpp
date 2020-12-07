@@ -29,7 +29,10 @@ ISource::Status RemoteSource::prepare()
     /// To avoid resetting the connection (because of "unfinished" query) in the
     /// RemoteQueryExecutor it should be finished explicitly.
     if (status == Status::Finished)
+    {
         query_executor->finish(&read_context);
+        is_async_state = false;
+    }
     return status;
 }
 
